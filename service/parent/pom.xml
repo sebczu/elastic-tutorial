@@ -1,0 +1,87 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>parent</artifactId>
+  <packaging>pom</packaging>
+
+  <parent>
+    <groupId>com.sebczu.elastic.tutorial</groupId>
+    <artifactId>service</artifactId>
+    <version>0.0.1</version>
+  </parent>
+
+  <properties>
+    <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+    <spring-boot.version>2.6.4</spring-boot.version>
+    <jib-maven-plugin.version>3.1.4</jib-maven-plugin.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.sebczu.elastic.tutorial</groupId>
+        <artifactId>bom</artifactId>
+        <version>${project.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven-surefire-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring-boot.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>com.google.cloud.tools</groupId>
+          <artifactId>jib-maven-plugin</artifactId>
+          <version>${jib-maven-plugin.version}</version>
+          <configuration>
+            <from>
+              <image>openjdk:17-alpine</image>
+            </from>
+            <to>
+              <image>sebczu/personal:elastic-tutorial-${project.version}</image>
+              <tags>
+                <tag>elastic-tutorial-latest</tag>
+              </tags>
+            </to>
+            <container>
+              <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+              <ports>
+                <port>8080</port>
+              </ports>
+            </container>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

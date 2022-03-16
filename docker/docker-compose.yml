@@ -1,0 +1,32 @@
+version: '3.3'
+services:
+
+  elastic-tutorial:
+    image: sebczu/personal:${APPLICATION_VERSION}
+    container_name: elastic-tutorial
+    ports:
+      - 8080:8080
+
+  elastic:
+    image: elasticsearch:${ELASTIC_VERSION}
+    container_name: elastic
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    volumes:
+      - ./volumes:/docker-entrypoint-initdb.d
+
+  kibana:
+    image: kibana:8.1.0
+    container_name: kibana
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elastic:9200
+#    networks:
+#      - es-net
+    depends_on:
+      - elastic

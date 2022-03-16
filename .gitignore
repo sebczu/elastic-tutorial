@@ -1,0 +1,4 @@
+.idea/
+*.iml
+target/
+**/.git-versioned-pom.xml
