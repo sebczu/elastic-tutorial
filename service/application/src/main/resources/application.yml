@@ -3,3 +3,10 @@ management:
     web:
       exposure:
         include: "*"
+
+spring:
+  elasticsearch:
+    uris:
+      - localhost:9200
+    connectionTimeout: PT5S
+    socketTimeout: PT30S
