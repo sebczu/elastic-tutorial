@@ -17,7 +17,7 @@ import static com.sebczu.elastic.tutorial.application.book.ElasticsearchInitiali
 @Document(indexName = BOOK_INDEX, createIndex = true)
 @Setting(
   shards = 2,
-  replicas = 2)
+  replicas = 1)
 public class Book {
 
   @Id

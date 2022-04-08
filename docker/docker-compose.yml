@@ -7,24 +7,49 @@ services:
     ports:
       - 8080:8080
     environment:
-      - SPRING_ELASTICSEARCH_URIS=elastic:9200
+      - SPRING_ELASTICSEARCH_URIS=[elasticsearch1:9200,elasticsearch2:9200,elasticsearch3:9200]
 
-  elastic:
-    image: elasticsearch:${ELASTIC_VERSION}
-    container_name: elastic
+  elasticsearch1:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION}
+    container_name: elasticsearch1
     ports:
       - 9200:9200
       - 9300:9300
     environment:
-      - discovery.type=single-node
+      - node.name=elasticsearch1
+      - cluster.name=elastic-cluster
+      - cluster.initial_master_nodes=elasticsearch1,elasticsearch2,elasticsearch3
+      - discovery.seed_hosts=elasticsearch2,elasticsearch3
+      - xpack.security.enabled=false
+
+  elasticsearch2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION}
+    container_name: elasticsearch2
+    environment:
+      - node.name=elasticsearch2
+      - cluster.name=elastic-cluster
+      - cluster.initial_master_nodes=elasticsearch1,elasticsearch2,elasticsearch3
+      - discovery.seed_hosts=elasticsearch1,elasticsearch3
+      - xpack.security.enabled=false
+
+  elasticsearch3:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION}
+    container_name: elasticsearch3
+    environment:
+      - node.name=elasticsearch3
+      - cluster.name=elastic-cluster
+      - cluster.initial_master_nodes=elasticsearch1,elasticsearch2,elasticsearch3
+      - discovery.seed_hosts=elasticsearch1,elasticsearch2
       - xpack.security.enabled=false
 
   kibana:
-    image: kibana:${ELASTIC_VERSION}
+    image: docker.elastic.co/kibana/kibana:${KIBANA_VERSION}
     container_name: kibana
     ports:
       - 5601:5601
     environment:
-      - ELASTICSEARCH_HOSTS=http://elastic:9200
+      - ELASTICSEARCH_HOSTS=http://elasticsearch1:9200
     depends_on:
-      - elastic
+      - elasticsearch1
+      - elasticsearch2
+      - elasticsearch3
